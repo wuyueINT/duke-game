@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.VH> {
+public class NamelistRecyclerAdapter extends RecyclerView.Adapter<NamelistRecyclerAdapter.VH> {
 
     List<String> nameList;
     Context context;
-    RecyclerAdapter adapter;
+    NamelistRecyclerAdapter adapter;
 
-    public RecyclerAdapter(Context context, List<String> nameList) {
+    public NamelistRecyclerAdapter(Context context, List<String> nameList) {
         this.nameList = nameList;
         this.context = context;
         adapter = this;
