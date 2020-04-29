@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     EditText et_name;
     Button btn_addpl;
     Button btn_start;
+    Button btn_create;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         nameList = new ArrayList<>();
         initView();
-        initData();
+        //initData();
 
         //设置导航栏
         mSideBar.setMaxOffset(100);
@@ -82,8 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 scroll.scrollBy(0, 1000);
             }
         });
+
+
+
     }
 
+    //模拟玩家数据
     private void initData() {
         nameList.add("aaaa");
         nameList.add("bbbbb");
@@ -97,5 +102,6 @@ public class MainActivity extends AppCompatActivity {
         btn_start = findViewById(R.id.btn_start);
         et_name = findViewById(R.id.et_pl);
         scroll = findViewById(R.id.scroll);
+        btn_create = findViewById(R.id.btn_create);
     }
 }

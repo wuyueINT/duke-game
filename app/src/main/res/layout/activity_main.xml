@@ -61,9 +61,10 @@
                 android:layout_height="800dp" />
 
             <Button
+                android:id="@+id/btn_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="下一页"/>
+                android:text="生成陈述顺序名单"/>
 
 
         </LinearLayout>
