@@ -22,28 +22,36 @@ public class MainActivity extends AppCompatActivity {
     private com.gjiazhe.wavesidebar.WaveSideBar mSideBar;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
+    private RecyclerView mRecyclerView3;
     private List<String> nameList;
+    private List<String> stateList;
+    private List<String> questionList;
     private ScrollView scroll;
     public NamelistRecyclerAdapter adapter;
-    public NamelistRecyclerAdapter adapter2;
+    public StatelistRecyclerAdapter adapter2;
+    public QuestionlistRecyclerAdapter adapter3;
 
     EditText et_name;
     Button btn_addpl;
     Button btn_start;
     Button btn_create;
-    TextView tv_statelist;
     Button btn_laststate;
     Button btn_nextstate;
+    Button btn_lastquestion;
+    Button btn_nextquestion;
 
     //发言人序号
     private int i;
+    String lastquestion = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         nameList = new ArrayList<>();
+        stateList = new ArrayList<>();
+        questionList = new ArrayList<>();
         initView();
         initData();
 
@@ -60,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         scroll.scrollTo(0, 0);
                         break;
                     case "游戏":
-                        scroll.scrollTo(0, 1000);
+                        scroll.scrollTo(0, btn_create.getTop());
                         break;
                     default:
                         break;
@@ -89,10 +97,17 @@ public class MainActivity extends AppCompatActivity {
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scroll.scrollBy(0, 1000);
+                scroll.scrollBy(0, btn_create.getTop());
+                if (nameList.size()>0){
+                    stateList.addAll(nameList);
+                    stateList.set(0, stateList.get(0)+"*");
+                    adapter2 = new StatelistRecyclerAdapter(MainActivity.this, questionList, stateList, adapter3);
+                    mRecyclerView2.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    mRecyclerView2.setAdapter(adapter2);
+                }
             }
         });
-        i = 1;
+        i = 0;
 
         //第二页的内容
         //随机为玩家产生发言名单
@@ -101,11 +116,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (nameList.size()>0){
                     //打乱列表的顺序并显示
-                    Collections.shuffle(nameList);
-                    tv_statelist.setText(createStateList());
-                    adapter2 = new NamelistRecyclerAdapter(MainActivity.this, nameList);
-                    mRecyclerView2.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    mRecyclerView2.setAdapter(adapter2);
+                    Collections.shuffle(stateList);
+                    adapter2.notifyDataSetChanged();
                 }
             }
         });
@@ -114,9 +126,13 @@ public class MainActivity extends AppCompatActivity {
         btn_nextstate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (i<nameList.size()){
+                if (i<stateList.size()-1){
+                    String s = stateList.get(i);
+                    stateList.set(i, s.substring(0, s.length()-1));
+                    adapter2.notifyItemChanged(i);
                     i++;
-                    tv_statelist.setText(createStateList());
+                    stateList.set(i, stateList.get(i)+"*");
+                    adapter2.notifyItemChanged(i);
                 }
             }
         });
@@ -125,54 +141,72 @@ public class MainActivity extends AppCompatActivity {
         btn_laststate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (i>1){
+                if (i>0){
+                    String s = stateList.get(i);
+                    stateList.set(i, s.substring(0, s.length()-1));
+                    adapter2.notifyItemChanged(i);
                     i--;
-                    tv_statelist.setText(createStateList());
+                    stateList.set(i, stateList.get(i)+"*");
+                    adapter2.notifyItemChanged(i);
                 }
             }
         });
 
+        //提问人名单
+        adapter3 = new QuestionlistRecyclerAdapter(this, questionList);
+        mRecyclerView3.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView3.setAdapter(adapter3);
 
+        //上一个提问人
+        btn_lastquestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lastquestion!=null){
+                    questionList.add(0, lastquestion);
+                    adapter3.notifyItemInserted(0);
+                    adapter3.notifyItemRangeChanged(1, questionList.size()-1);
+                }
+            }
+        });
 
+        //下一个提问人
+        btn_nextquestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lastquestion = questionList.get(0);
+                questionList.remove(0);
+                adapter3.notifyItemRemoved(0);
+                adapter3.notifyItemRangeChanged(1, questionList.size()-1);
+            }
+        });
 
     }
 
     //模拟玩家数据
     private void initData() {
-        nameList.add("aaaa");
-        nameList.add("bbbbb");
-        nameList.add("cccc");
-        nameList.add("dddd");
-        nameList.add("eee");
-        nameList.add("ffffff");
+        nameList.add("灰岩");
+        nameList.add("元甲");
+        nameList.add("咸鱼");
+        nameList.add("占占");
+        nameList.add("佳玉");
+        nameList.add("婷婷");
     }
 
     private void initView() {
         mSideBar = findViewById(R.id.side_bar);
         mRecyclerView = findViewById(R.id.recycler_namelist);
         mRecyclerView2 = findViewById(R.id.recycler_statelist);
+        mRecyclerView3 = findViewById(R.id.recycler_questionlist);
         btn_addpl = findViewById(R.id.btn_addpl);
         btn_start = findViewById(R.id.btn_start);
         et_name = findViewById(R.id.et_pl);
         scroll = findViewById(R.id.scroll);
         btn_create = findViewById(R.id.btn_create);
-        tv_statelist = findViewById(R.id.tv_statelist);
         btn_laststate = findViewById(R.id.btn_laststate);
         btn_nextstate = findViewById(R.id.btn_nextstate);
-
+        btn_lastquestion = findViewById(R.id.btn_lastquestion);
+        btn_nextquestion = findViewById(R.id.btn_nextquestion);
     }
 
-    //生成发言人列表
-    private String createStateList(){
 
-        StringBuilder sb = new StringBuilder();
-        for (int j=0; j<nameList.size(); j++){
-            if (i==j){
-                sb.append(nameList.get(j)).append("*").append("\n");
-            } else {
-                sb.append(nameList.get(j)).append("\n");
-            }
-        }
-        return sb.toString();
-    }
 }

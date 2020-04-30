@@ -1,0 +1,12 @@
+statelist
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch secondpage
+# Changes to be committed:
+#	modified:   app/src/main/java/com/wuyue/countinggame/MainActivity.java
+#	renamed:    app/src/main/java/com/wuyue/countinggame/RecyclerAdapter.java -> app/src/main/java/com/wuyue/countinggame/NamelistRecyclerAdapter.java
+#	new file:   app/src/main/java/com/wuyue/countinggame/StatelistRecyclerAdapter.java
+#	modified:   app/src/main/res/layout/activity_main.xml
+#	new file:   app/src/main/res/layout/item2.xml
+#

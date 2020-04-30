@@ -15,11 +15,17 @@ import java.util.List;
 public class StatelistRecyclerAdapter extends RecyclerView.Adapter<StatelistRecyclerAdapter.VH> {
 
     Context context;
+    List<String> questionList;
     List<String> stateList;
+    QuestionlistRecyclerAdapter questionsAdapter;
 
-    public StatelistRecyclerAdapter(Context context, List<String> stateList) {
+
+    public StatelistRecyclerAdapter(Context context, List<String> questionList, List<String> stateList,
+                                    QuestionlistRecyclerAdapter questions) {
         this.context = context;
+        this.questionList = questionList;
         this.stateList = stateList;
+        this.questionsAdapter = questions;
     }
 
     @NonNull
@@ -30,12 +36,18 @@ public class StatelistRecyclerAdapter extends RecyclerView.Adapter<StatelistRecy
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
+    public void onBindViewHolder(@NonNull VH holder, final int position) {
         holder.tv_item2.setText(stateList.get(position));
         holder.tv_item2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //向提问列表中添加玩家名单
+                questionsAdapter.notifyItemInserted(questionList.size());
+                String s = stateList.get(position);
+                if (s.contains("*")){
+                    s = s.substring(0, s.length()-1);
+                }
+                questionList.add(s);
             }
         });
     }
