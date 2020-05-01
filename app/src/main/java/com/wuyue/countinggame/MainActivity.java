@@ -16,6 +16,8 @@ import com.gjiazhe.wavesidebar.WaveSideBar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public NamelistRecyclerAdapter adapter;
     public StatelistRecyclerAdapter adapter2;
     public QuestionlistRecyclerAdapter adapter3;
+    public Timer timer;
 
     EditText et_name;
     Button btn_addpl;
@@ -39,10 +42,13 @@ public class MainActivity extends AppCompatActivity {
     Button btn_nextstate;
     Button btn_lastquestion;
     Button btn_nextquestion;
+    Button btn_time;
 
     //发言人序号
     private int i;
     String lastquestion = null;
+    int total_time = 300;
+    private boolean timerIsCanceled = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -157,6 +163,48 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView3.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView3.setAdapter(adapter3);
 
+        //倒数计时模块，这里用一个button上的text来显示时间
+        //点击开始计时
+        btn_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (timerIsCanceled){
+                    timerIsCanceled = false;
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    total_time--;
+                                    String s = total_time + "s";
+                                    btn_time.setText(s);
+                                    if (total_time<=0){
+                                        timer.cancel();
+                                        timerIsCanceled = true;
+                                    }
+                                }
+                            });
+                        }
+                    }, 1000, 1000);
+                }
+            }
+        });
+
+        //长按重置时间
+        btn_time.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                timer.cancel();
+                timerIsCanceled = true;
+                btn_time.setText("300s");
+                total_time = 300;
+                return true;
+            }
+        });
+
+
         //上一个提问人
         btn_lastquestion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,12 +232,12 @@ public class MainActivity extends AppCompatActivity {
 
     //模拟玩家数据
     private void initData() {
-        nameList.add("灰岩");
-        nameList.add("元甲");
         nameList.add("咸鱼");
-        nameList.add("占占");
-        nameList.add("佳玉");
         nameList.add("婷婷");
+        nameList.add("佳玉");
+        nameList.add("元甲");
+        nameList.add("商商");
+        nameList.add("灰岩");
     }
 
     private void initView() {
@@ -206,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
         btn_nextstate = findViewById(R.id.btn_nextstate);
         btn_lastquestion = findViewById(R.id.btn_lastquestion);
         btn_nextquestion = findViewById(R.id.btn_nextquestion);
+        btn_time = findViewById(R.id.btn_time);
     }
 
 
