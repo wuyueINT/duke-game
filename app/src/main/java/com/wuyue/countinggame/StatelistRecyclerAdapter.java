@@ -19,7 +19,6 @@ public class StatelistRecyclerAdapter extends RecyclerView.Adapter<StatelistRecy
     List<String> stateList;
     QuestionlistRecyclerAdapter questionsAdapter;
 
-
     public StatelistRecyclerAdapter(Context context, List<String> questionList, List<String> stateList,
                                     QuestionlistRecyclerAdapter questions) {
         this.context = context;

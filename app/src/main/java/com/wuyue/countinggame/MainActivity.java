@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.gjiazhe.wavesidebar.WaveSideBar;
 
@@ -227,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 adapter3.notifyItemRangeChanged(1, questionList.size()-1);
             }
         });
-
     }
 
     //模拟玩家数据
@@ -256,6 +254,4 @@ public class MainActivity extends AppCompatActivity {
         btn_nextquestion = findViewById(R.id.btn_nextquestion);
         btn_time = findViewById(R.id.btn_time);
     }
-
-
 }
